@@ -58,6 +58,13 @@ func command(node *kong.Node) Command {
 				splitted[index] = strings.TrimSpace(v)
 			}
 			cmd.Completion.Flag[flag.Name] = splitted
+		} else if tag := flag.Flag.Tag; tag != nil {
+			switch tag.Type {
+			case "path", "existingfile":
+				cmd.Completion.Flag[flag.Name] = []string{"$files"}
+			case "existingdir":
+				cmd.Completion.Flag[flag.Name] = []string{"$directories"}
+			}
 		}
 	}
 
