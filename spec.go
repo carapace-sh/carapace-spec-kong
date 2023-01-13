@@ -2,6 +2,7 @@ package spec
 
 import (
 	"fmt"
+	"strings"
 
 	"github.com/alecthomas/kong"
 	"gopkg.in/yaml.v2"
@@ -24,6 +25,7 @@ func command(node kong.Node) Command {
 		Flags:       make(map[string]string),
 		Commands:    make([]Command, 0),
 	}
+	cmd.Completion.Flag = make(map[string][]string)
 
 	if group := node.Group; group != nil {
 		cmd.Group = group.Key
@@ -50,7 +52,13 @@ func command(node kong.Node) Command {
 		}
 		cmd.Flags[formatted] = flag.Help
 
-		// TODO enum
+		if flag.Enum != "" {
+			splitted := strings.Split(flag.Enum, ",")
+			for index, v := range splitted {
+				splitted[index] = strings.TrimSpace(v)
+			}
+			cmd.Completion.Flag[flag.Name] = splitted
+		}
 	}
 
 	for _, subcmd := range node.Children {

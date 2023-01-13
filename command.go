@@ -1,7 +1,5 @@
 package spec
 
-type action string
-
 type Command struct {
 	Name            string            `yaml:"name"`
 	Aliases         []string          `yaml:"aliases,omitempty"`
@@ -10,11 +8,11 @@ type Command struct {
 	Flags           map[string]string `yaml:"flags,omitempty"`
 	PersistentFlags map[string]string `yaml:"persistentflags,omitempty"`
 	Completion      struct {
-		Flag          map[string][]action `yaml:"flag,omitempty"`
-		Positional    [][]action          `yaml:"positional,omitempty"`
-		PositionalAny []action            `yaml:"positionalany,omitempty"`
-		Dash          [][]action          `yaml:"dash,omitempty"`
-		DashAny       []action            `yaml:"dashany,omitempty"`
+		Flag          map[string][]string `yaml:"flag,omitempty"`
+		Positional    [][]string          `yaml:"positional,omitempty"`
+		PositionalAny []string            `yaml:"positionalany,omitempty"`
+		Dash          [][]string          `yaml:"dash,omitempty"`
+		DashAny       []string            `yaml:"dashany,omitempty"`
 	} `yaml:"completion,omitempty"`
 	Commands []Command `yaml:"commands,omitempty"`
 }
