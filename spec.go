@@ -9,7 +9,7 @@ import (
 )
 
 func Scrape(ctx kong.Context) {
-	cmd := command(*ctx.Model.Node)
+	cmd := command(ctx.Model.Node)
 	m, err := yaml.Marshal(cmd)
 	if err != nil {
 		panic(err.Error())
@@ -17,7 +17,7 @@ func Scrape(ctx kong.Context) {
 	fmt.Println(string(m))
 }
 
-func command(node kong.Node) Command {
+func command(node *kong.Node) Command {
 	cmd := Command{
 		Name:        node.Name,
 		Aliases:     node.Aliases,
@@ -63,7 +63,7 @@ func command(node kong.Node) Command {
 
 	for _, subcmd := range node.Children {
 		if !subcmd.Hidden {
-			cmd.Commands = append(cmd.Commands, command(*subcmd))
+			cmd.Commands = append(cmd.Commands, command(subcmd))
 		}
 	}
 	return cmd
