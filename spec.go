@@ -5,11 +5,12 @@ import (
 	"strings"
 
 	"github.com/alecthomas/kong"
-	"gopkg.in/yaml.v2"
+	"github.com/rsteube/carapace-spec/pkg/command"
+	"gopkg.in/yaml.v3"
 )
 
 func Scrape(ctx kong.Context) {
-	cmd := command(ctx.Model.Node)
+	cmd := scrape(ctx.Model.Node)
 	m, err := yaml.Marshal(cmd)
 	if err != nil {
 		panic(err.Error())
@@ -17,13 +18,13 @@ func Scrape(ctx kong.Context) {
 	fmt.Println(string(m))
 }
 
-func command(node *kong.Node) Command {
-	cmd := Command{
+func scrape(node *kong.Node) command.Command {
+	cmd := command.Command{
 		Name:        node.Name,
 		Aliases:     node.Aliases,
 		Description: node.Help,
 		Flags:       make(map[string]string),
-		Commands:    make([]Command, 0),
+		Commands:    make([]command.Command, 0),
 	}
 	cmd.Completion.Flag = make(map[string][]string)
 
@@ -70,7 +71,7 @@ func command(node *kong.Node) Command {
 
 	for _, subcmd := range node.Children {
 		if !subcmd.Hidden {
-			cmd.Commands = append(cmd.Commands, command(subcmd))
+			cmd.Commands = append(cmd.Commands, scrape(subcmd))
 		}
 	}
 	return cmd
