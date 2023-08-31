@@ -19,10 +19,10 @@ func (s spec) Run(ctx *kong.Context) (err error) {
 	return
 }
 
-var PluginSpec struct {
+var Plugin struct {
 	Carapace struct {
-		Spec spec `cmd:"" name:"spec" help:""`
-	} `cmd:"" name:"_carapace" hidden:"" help:""`
+		Spec spec `cmd:"" name:"spec"`
+	} `cmd:"" name:"_carapace" hidden:""`
 }
 
 func Command(node *kong.Node) command.Command {
