@@ -7,5 +7,3 @@ require (
 	github.com/rsteube/carapace-spec v0.10.1
 	gopkg.in/yaml.v3 v3.0.1
 )
-
-replace github.com/rsteube/carapace-spec => ../carapace-spec/

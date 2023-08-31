@@ -1,4 +1,4 @@
-package spec
+package scrape
 
 import (
 	"fmt"
