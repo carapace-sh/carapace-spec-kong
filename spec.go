@@ -1,4 +1,4 @@
-package scrape
+package spec
 
 import (
 	"fmt"
@@ -19,7 +19,7 @@ func (s spec) Run(ctx *kong.Context) (err error) {
 	return
 }
 
-var Plugin struct {
+type Plugin struct {
 	Carapace struct {
 		Spec spec `cmd:"" name:"spec"`
 	} `cmd:"" name:"_carapace" hidden:""`
