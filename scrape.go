@@ -9,21 +9,27 @@ import (
 	"gopkg.in/yaml.v3"
 )
 
-func Scrape(ctx kong.Context) {
-	cmd := scrape(ctx.Model.Node)
-	m, err := yaml.Marshal(cmd)
-	if err != nil {
-		panic(err.Error())
+type spec struct{}
+
+func (s spec) Run(ctx *kong.Context) (err error) {
+	var m []byte
+	if m, err = yaml.Marshal(Command(ctx.Model.Node)); err == nil {
+		fmt.Fprintln(ctx.Stdout, string(m))
 	}
-	fmt.Println(string(m))
+	return
 }
 
-func scrape(node *kong.Node) command.Command {
+var PluginSpec struct {
+	Carapace struct {
+		Spec spec `cmd:"" name:"spec" help:""`
+	} `cmd:"" name:"_carapace" hidden:"" help:""`
+}
+
+func Command(node *kong.Node) command.Command {
 	cmd := command.Command{
 		Name:        node.Name,
 		Aliases:     node.Aliases,
 		Description: node.Help,
-		Flags:       make(map[string]string),
 		Commands:    make([]command.Command, 0),
 	}
 	cmd.Completion.Flag = make(map[string][]string)
@@ -33,25 +39,18 @@ func scrape(node *kong.Node) command.Command {
 	}
 
 	for _, flag := range node.Flags {
-		formatted := ""
-
+		f := command.Flag{
+			Longhand:   "--" + flag.Name,
+			Value:      !flag.IsBool(),
+			Repeatable: flag.IsCounter() || flag.IsCumulative(),
+			Required:   flag.Required,
+			Usage:      flag.Help,
+		}
 		if flag.Short != 0 {
-			formatted += fmt.Sprintf("-%v, ", string(flag.Short))
-		}
-		formatted += fmt.Sprintf("--%v", flag.Name)
-
-		switch {
-		case flag.IsBool():
-		//case optionalArgument:
-		//	formatted += "?"
-		default:
-			formatted += "="
+			f.Shorthand = "-" + string(flag.Short)
 		}
 
-		if flag.IsCounter() || flag.IsCumulative() {
-			formatted += "*"
-		}
-		cmd.Flags[formatted] = flag.Help
+		cmd.AddFlag(f)
 
 		if flag.Enum != "" {
 			splitted := strings.Split(flag.Enum, ",")
@@ -71,7 +70,7 @@ func scrape(node *kong.Node) command.Command {
 
 	for _, subcmd := range node.Children {
 		if !subcmd.Hidden {
-			cmd.Commands = append(cmd.Commands, scrape(subcmd))
+			cmd.Commands = append(cmd.Commands, Command(subcmd))
 		}
 	}
 	return cmd
