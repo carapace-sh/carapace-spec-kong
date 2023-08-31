@@ -5,7 +5,7 @@ import (
 	"strings"
 
 	"github.com/alecthomas/kong"
-	"github.com/rsteube/carapace-spec/pkg/command"
+	"github.com/rsteube/carapace-spec-command"
 	"gopkg.in/yaml.v3"
 )
 
