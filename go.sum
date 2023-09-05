@@ -3,8 +3,8 @@ github.com/alecthomas/kong v0.8.0 h1:ryDCzutfIqJPnNn0omnrgHLbAggDQM2VWHikE1xqK7s
 github.com/alecthomas/kong v0.8.0/go.mod h1:n1iCIO2xS46oE8ZfYCNDqdR0b0wZNrXAIAqro/2132U=
 github.com/alecthomas/repr v0.1.0 h1:ENn2e1+J3k09gyj2shc0dHr/yjaWSHRlrJ4DPMevDqE=
 github.com/hexops/gotextdiff v1.0.3 h1:gitA9+qJrrTCsiCl7+kh75nPqQt1cx4ZkudSTLoUqJM=
-github.com/rsteube/carapace-spec v0.10.3 h1:7n2Z7ceo0/Ulj0p9puSs2foTLS4AAe68vK8nN9egNtg=
-github.com/rsteube/carapace-spec v0.10.3/go.mod h1:S+scCJRlJonPtJ05DLo4Mg29+sbRtTlqIq9ym3aekl0=
+github.com/rsteube/carapace-spec v0.10.4 h1:k4QSjSk/EAdCUGinbR2/UU2soxP5R/NudNVz4LvoQUM=
+github.com/rsteube/carapace-spec v0.10.4/go.mod h1:fBSUVcQ9PQ7m0d1W/ovGHRvY1cliphCMTFtk1sH3X9k=
 gopkg.in/check.v1 v0.0.0-20161208181325-20d25e280405 h1:yhCVgyC4o1eVCa2tZl7eS0r+SDo693bJlVdllGtEeKM=
 gopkg.in/check.v1 v0.0.0-20161208181325-20d25e280405/go.mod h1:Co6ibVJAznAaIkqp8huTwlJQCZ016jof/cbN4VW5Yz0=
 gopkg.in/yaml.v3 v3.0.1 h1:fxVm/GzAzEWqLHuvctI91KS9hhNmmWOoWu0XTYJS7CA=
