@@ -40,14 +40,15 @@ func Command(node *kong.Node) command.Command {
 
 	for _, flag := range node.Flags {
 		f := command.Flag{
-			Longhand:   "--" + flag.Name,
-			Value:      !flag.IsBool(),
-			Repeatable: flag.IsCounter() || flag.IsCumulative(),
-			Required:   flag.Required,
-			Usage:      flag.Help,
+			Longhand:    flag.Name,
+			Value:       !flag.IsBool(),
+			Repeatable:  flag.IsCounter() || flag.IsCumulative(),
+			Required:    flag.Required,
+			Description: flag.Help,
+			Default:     flag.Default,
 		}
 		if flag.Short != 0 {
-			f.Shorthand = "-" + string(flag.Short)
+			f.Shorthand = string(flag.Short)
 		}
 
 		cmd.AddFlag(f)
