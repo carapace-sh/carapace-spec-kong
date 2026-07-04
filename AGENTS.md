@@ -33,7 +33,8 @@ The entire library is one file: `spec.go` (package `spec`). Control flow:
 `Command(node *kong.Node) command.Command` is the core recursive translator. It maps kong concepts onto the carapace-spec command model:
 
 - **node → command**: `Name`, `Aliases`, `Help` → `Description`, optional `Group` key.
-- **flags → flags**: `Longhand = flag.Name` (bare, no dashes), `Shorthand = string(flag.Short)` (bare, no dash) when set, `Value = !IsBool()`, `Repeatable = IsCounter() || IsCumulative()`, `Required`, `Description = flag.Help`, `Default = flag.Default`. Added via `cmd.AddFlag(f)`, which encodes them into the `Flags` map using carapace-spec's flag-string format (see below).
+- **flags → flags**: `Longhand = flag.Name` (bare, no dashes), `Shorthand = string(flag.Short)` (bare, no dash) when set, `Value = !IsBool()`, `Repeatable = IsCounter() || IsCumulative()`, `Required`, `Hidden = flag.Hidden`, `Description = flag.Help`, `Default = flag.Default`. Added via `cmd.AddFlag(f)`, which encodes them into the `Flags` map using carapace-spec's flag-string format (see below).
+- **xor → exclusive flags**: kong's `xor` tag groups flags as mutually exclusive. Each `flag.Xor` entry is a group name; flags sharing a group name are collected and emitted as `cmd.ExclusiveFlags` (a `[][]string`). Groups with only one flag are skipped.
 - **flag completions**: kong's `flag.Enum` (comma-separated) → list of choices; otherwise the kong struct tag `Type` is inspected for `path`/`existingfile` → `$files` and `existingdir` → `$directories`. **No other tag types are handled** — adding support for more is a common extension point.
 - **subcommands**: `node.Children` are recursed, skipping `Hidden` ones. Hidden commands are dropped entirely (not just marked hidden).
 
