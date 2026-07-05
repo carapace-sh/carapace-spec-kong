@@ -38,19 +38,26 @@ func Command(node *kong.Node) command.Command {
 		cmd.Group = group.Key
 	}
 
+	xorGroups := make(map[string][]string)
 	for _, flag := range node.Flags {
 		f := command.Flag{
-			Longhand:   "--" + flag.Name,
-			Value:      !flag.IsBool(),
-			Repeatable: flag.IsCounter() || flag.IsCumulative(),
-			Required:   flag.Required,
-			Usage:      flag.Help,
+			Longhand:    flag.Name,
+			Value:       !flag.IsBool(),
+			Repeatable:  flag.IsCounter() || flag.IsCumulative(),
+			Required:    flag.Required,
+			Hidden:      flag.Hidden,
+			Description: flag.Help,
+			Default:     flag.Default,
 		}
 		if flag.Short != 0 {
-			f.Shorthand = "-" + string(flag.Short)
+			f.Shorthand = string(flag.Short)
 		}
 
 		cmd.AddFlag(f)
+
+		for _, xor := range flag.Xor {
+			xorGroups[xor] = append(xorGroups[xor], flag.Name)
+		}
 
 		if flag.Enum != "" {
 			splitted := strings.Split(flag.Enum, ",")
@@ -65,6 +72,12 @@ func Command(node *kong.Node) command.Command {
 			case "existingdir":
 				cmd.Completion.Flag[flag.Name] = []string{"$directories"}
 			}
+		}
+	}
+
+	for _, flags := range xorGroups {
+		if len(flags) > 1 {
+			cmd.ExclusiveFlags = append(cmd.ExclusiveFlags, flags)
 		}
 	}
 
