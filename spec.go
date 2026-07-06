@@ -2,6 +2,7 @@ package spec
 
 import (
 	"fmt"
+	"reflect"
 	"strings"
 
 	"github.com/alecthomas/kong"
@@ -47,7 +48,11 @@ func Command(node *kong.Node) command.Command {
 			Required:    flag.Required,
 			Hidden:      flag.Hidden,
 			Description: flag.Help,
-			Default:     flag.Default,
+		}
+		if flag.HasDefault {
+			if z := zeroDefaultString(flag); z != flag.Default {
+				f.Default = flag.Default
+			}
 		}
 		if flag.Short != 0 {
 			f.Shorthand = string(flag.Short)
@@ -87,4 +92,11 @@ func Command(node *kong.Node) command.Command {
 		}
 	}
 	return cmd
+}
+
+func zeroDefaultString(flag *kong.Flag) string {
+	if !flag.Target.IsValid() {
+		return ""
+	}
+	return fmt.Sprintf("%v", reflect.Zero(flag.Target.Type()).Interface())
 }
